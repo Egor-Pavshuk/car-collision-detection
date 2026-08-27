@@ -1,0 +1,99 @@
+# ==============================
+# Python
+# ==============================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ==============================
+# IDE
+# ==============================
+
+.idea/
+.vscode/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# ==============================
+# Jupyter
+# ==============================
+
+.ipynb_checkpoints/
+
+# ==============================
+# Data
+# ==============================
+
+# Input/output videos
+data/input/*
+data/output/*
+
+# Logs generated during processing
+data/logs/*
+
+# Keep directories
+!data/input/.gitkeep
+!data/output/.gitkeep
+!data/logs/.gitkeep
+!tests/.gitkeep
+
+# ==============================
+# Models
+# ==============================
+
+# Large model files
+*.pt
+*.onnx
+*.engine
+*.weights
+*.pth
+
+# ==============================
+# Python tooling
+# ==============================
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ==============================
+# OS
+# ==============================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Environment / secrets
+# ==============================
+
+.env
+.env.*
+!.env.example
+
+# ==============================
+# Temporary files
+# ==============================
+
+*.tmp
+*.temp
+*.log
+
+temp_notebooks/
+tests/*.*
+
+# Ultralytics
+runs/
