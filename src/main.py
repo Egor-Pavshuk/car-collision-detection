@@ -123,8 +123,6 @@ def main():
 
             render_objects: list[RenderObject] = []
 
-            frame_object_ids = set()
-
             for box in boxes:
 
                 if box.id is None:
@@ -217,7 +215,6 @@ def main():
                     and score >= threshold
                 )
 
-                frame_object_ids.add(object_id)
                 class_name = model.names[class_id]
 
                 render_objects.append(
