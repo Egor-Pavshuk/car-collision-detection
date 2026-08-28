@@ -1,4 +1,5 @@
 import csv, cv2
+import time
 from tqdm import tqdm
 from pathlib import Path
 from ultralytics import YOLO
@@ -115,6 +116,8 @@ def main():
         ])
 
         for frame_idx, result in enumerate(tqdm(results, total=total_frames, desc="Processing video", unit="frame")):
+
+            frame_start = time.perf_counter()
 
             boxes = result.boxes
 
@@ -257,8 +260,15 @@ def main():
             event_detector.close_expired(frame_idx)
 
             inference_time_ms = result.speed["inference"]
+            pipeline_time_ms = (
+                time.perf_counter() - frame_start
+            ) * 1000
             vehicles_count = len(render_objects)
-            render_state = RenderState(frame=frame_idx, inference_time_ms=inference_time_ms, objects=render_objects, vehicles_count=vehicles_count)
+            render_state = RenderState(frame=frame_idx, 
+                                       inference_time_ms=inference_time_ms, 
+                                       pipeline_time_ms=pipeline_time_ms,
+                                       objects=render_objects, 
+                                       vehicles_count=vehicles_count)
             
             frame = renderer.render(result.orig_img.copy(), render_state)
             video_writer.write(frame)

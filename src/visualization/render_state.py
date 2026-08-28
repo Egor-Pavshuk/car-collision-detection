@@ -22,6 +22,7 @@ class RenderObject:
 class RenderState:
     frame: int
     inference_time_ms: float
+    pipeline_time_ms: float
     vehicles_count: int
     objects: list[RenderObject]
 

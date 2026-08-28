@@ -75,8 +75,19 @@ class Renderer:
 
         cv2.putText(
             frame,
-            f"Vehicles count: {state.vehicles_count}",
+            f"Pipeline: {state.pipeline_time_ms} ms",
             (30, 170),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            2,
+            (255, 40, 40),
+            3,
+            cv2.LINE_AA,
+        )
+
+        cv2.putText(
+            frame,
+            f"Vehicles count: {state.vehicles_count}",
+            (30, 230),
             cv2.FONT_HERSHEY_SIMPLEX,
             2,
             (255, 40, 40),
