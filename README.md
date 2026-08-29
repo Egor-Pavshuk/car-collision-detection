@@ -96,6 +96,7 @@ poetry run python -m src.main
 ### Model
 
 The project uses a YOLO model for vehicle detection and tracking. The model weights are not included in the repository due to their size.
+**YOLO26m** was used in this project.
 
 Different YOLO model versions can be used. The required model weights can be downloaded from the [Ultralytics documentation](https://docs.ultralytics.com/tasks/detect).
 
