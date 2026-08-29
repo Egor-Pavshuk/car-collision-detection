@@ -75,7 +75,7 @@ class Renderer:
 
         cv2.putText(
             frame,
-            f"Pipeline: {state.pipeline_time_ms} ms",
+            f"Pipeline: {state.pipeline_time_ms:.1f} ms",
             (30, 170),
             cv2.FONT_HERSHEY_SIMPLEX,
             2,
