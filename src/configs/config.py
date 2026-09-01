@@ -4,6 +4,8 @@ MODEL_PATH = "models/yolo26m.pt"
 VIDEO_PATH = "data/input/crash.mp4"
 LOG_TRACKING_PATH = "data/logs/tracking.csv"
 OUTPUT_VIDEO_PATH = "data/output/processed.mp4"
+COLLISION_EVENTS_PATH = "data/logs/collision_events.csv"
+VEHICLES_COUNT_PATH = "data/logs/vehicles_count.csv"
 SAVE_MODEL_OUTPUT = True
 
 # Model and detection

@@ -5,7 +5,7 @@ from pathlib import Path
 from ultralytics import YOLO
 from src.collision.zscore_estimator import ZScoreEstimator
 from src.configs.config import MODEL_PATH,  MIN_BBOX_AREA, CONFIDENCE, CLASSES
-from src.configs.config import SAVE_MODEL_OUTPUT, VIDEO_PATH, LOG_TRACKING_PATH, OUTPUT_VIDEO_PATH
+from src.configs.config import SAVE_MODEL_OUTPUT, VIDEO_PATH, LOG_TRACKING_PATH, OUTPUT_VIDEO_PATH, COLLISION_EVENTS_PATH, VEHICLES_COUNT_PATH
 from src.configs.config import TRACKER, MAX_FRAME_GAP, MAX_CENTER_DISTANCE, MIN_IOU, MAX_SIZE_RATIO
 from src.configs.config import TRAJECTORY_WINDOW_SIZE, ANOMALY_WINDOW_SIZE, ZSCORE_WINDOW_SIZE, Z_THRESHOLD
 from src.configs.config import MERGE_GAP, MIN_CONSECUTIVE_FRAMES
@@ -91,9 +91,11 @@ def main():
             f"Failed to open video writer: {OUTPUT_VIDEO_PATH}"
         )
 
-    with open(LOG_TRACKING_PATH, "w", newline="", encoding="utf-8") as file:
+    with open(LOG_TRACKING_PATH, "w", newline="", encoding="utf-8") as tracking_file, \
+         open(VEHICLES_COUNT_PATH, "w", newline="", encoding="utf-8") as vehicles_count_file:
 
-        writer = csv.writer(file)
+        writer = csv.writer(tracking_file)
+        count_writer = csv.writer(vehicles_count_file)
 
         writer.writerow([
             "frame",
@@ -113,6 +115,11 @@ def main():
             "anomaly_score",
             "zscore",
             "stitched",
+        ])
+
+        count_writer.writerow([
+            "frame",
+            "vehicle_count"
         ])
 
         for frame_idx, result in enumerate(tqdm(results, total=total_frames, desc="Processing video", unit="frame")):
@@ -269,12 +276,44 @@ def main():
                                        pipeline_time_ms=pipeline_time_ms,
                                        objects=render_objects, 
                                        vehicles_count=vehicles_count)
-            
+
+            count_writer.writerow([
+                frame_idx,
+                vehicles_count
+            ])
+
             frame = renderer.render(result.orig_img.copy(), render_state)
             video_writer.write(frame)
 
     video_writer.release()
-    remaining_events = event_detector.finalize()
+    _ = event_detector.finalize()
+
+    with open(COLLISION_EVENTS_PATH, "w", newline="", encoding="utf-8") as events_file:
+        events_writer = csv.writer(events_file)
+
+        events_writer.writerow([
+            "object_id",
+            "start_frame",
+            "end_frame",
+            "peak_frame",
+            "peak_score",
+            "peak_threshold",
+            "score_threshold_ratio",
+        ])
+
+        for object_id, events in event_detector.events.items():
+            for event in events:
+                ratio = event.peak_score / event.peak_threshold
+
+                events_writer.writerow([
+                    object_id,
+                    event.start_frame,
+                    event.end_frame,
+                    event.peak_frame,
+                    event.peak_score,
+                    event.peak_threshold,
+                    ratio,
+                ])
 
     print("\nDetected collision events:")
 
